@@ -4,10 +4,11 @@ import Dictionary from "../assets/Dictionary.json";
 function Header() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedWord, setSelectedWord] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 🔹 Added State
   const dropdownRef = useRef(null);
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-  // Close dropdown when clicking outside
+  // 🔹 Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -19,6 +20,11 @@ function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // 🔹 Toggle Dropdown
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   // Handle search input
   const handleSearch = (event) => {
@@ -45,18 +51,36 @@ function Header() {
       {/* Navbar Section */}
       <div className="flex justify-center items-center w-full px-6 h-16">
         <h1 className="text-3xl font-bold font-serif">URBAN DICTIONARY</h1>
-        
+
         {/* Navbar Buttons */}
         <div className="flex space-x-4 ml-8">
           <button className="px-4 py-2 bg-transparent text-white hover:bg-gray-700 rounded-md">Store</button>
           <button className="px-4 py-2 bg-transparent text-white hover:bg-gray-700 rounded-md">Blog</button>
           <button className="px-4 py-2 bg-transparent text-white hover:bg-gray-700 rounded-md">Advertise</button>
 
-          {/* Dropdown */}
+          {/* 🔹 Dropdown Menu */}
           <div className="relative" ref={dropdownRef}>
-            <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md">
+            <button
+              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md"
+              onClick={toggleDropdown}
+            >
               Browse ▼
             </button>
+
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-300 rounded-md p-4 shadow-lg z-50">
+                <div className="grid grid-cols-6 gap-3 text-center">
+                  {alphabet.map((letter) => (
+                    <button
+                      key={letter}
+                      className="p-2 w-10 h-10 flex items-center justify-center bg-gradient-to-b from-white to-gray-300 text-black rounded-full hover:from-gray-300 hover:to-gray-400 transition-all"
+                    >
+                      {letter}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -82,7 +106,7 @@ function Header() {
             <button onClick={closePopup} className="absolute top-2 right-2 text-red-600 text-xl font-bold">
               ×
             </button>
-            
+
             {/* Card Content */}
             <div className="card-body text-center">
               <h2 className="card-title text-4xl text-black font-bold">{selectedWord.word}</h2>
