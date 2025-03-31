@@ -1,0 +1,6 @@
+@plugin "daisyui";
+@layer base {
+  html {
+    @apply text-[100%]; /* Equivalent to text-size-adjust */
+  }
+}
